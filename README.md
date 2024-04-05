@@ -1,4 +1,4 @@
-# TasqueLite: A [tasque](https://github.com/vloldik/tasque) Storage Package with GORM and SQLite
+# TasqueLite: A [tasque](https://github.com/vloldik/tasque) Storage Package with GORM and SQLite (v0.3.0, v0.4.0)
 
 [![GoDoc](https://godoc.org/github.com/vloldik/tasquelite?status.svg)](https://godoc.org/github.com/vloldik/tasquelite)
 [![Go Report Card](https://goreportcard.com/badge/github.com/vloldik/tasquelite)](https://goreportcard.com/report/github.com/vloldik/tasquelite)
