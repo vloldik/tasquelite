@@ -3,9 +3,9 @@ module github.com/vloldik/tasquelite
 go 1.21.6
 
 require (
-	github.com/vloldik/tasque v0.0.0-20240225191440-9d8c63a1a7bd
+	github.com/vloldik/tasque v0.3.0
 	gorm.io/driver/sqlite v1.5.5
-	gorm.io/gorm v1.25.7
+	gorm.io/gorm v1.25.9
 )
 
 require (
