@@ -1,4 +1,4 @@
-# TasqueLite: A [tasque](https://github.com/vloldik/tasque) Storage Package with GORM and SQLite (v0.3.0, v0.4.0)
+# TasqueLite: A [tasque](https://github.com/vloldik/tasque) Storage Package with GORM and SQLite (v1.*)
 
 [![GoDoc](https://godoc.org/github.com/vloldik/tasquelite?status.svg)](https://godoc.org/github.com/vloldik/tasquelite)
 [![Go Report Card](https://goreportcard.com/badge/github.com/vloldik/tasquelite)](https://goreportcard.com/report/github.com/vloldik/tasquelite)
@@ -21,10 +21,5 @@ go get github.com/vloldik/tasquelite
 ## Usage
 
 ```go
-<<<<<<< HEAD
-taskStorage, err := tasquelite.NewGormTaskStorageManager[EmailTask](DatabaseName, &Task{})
-=======
-storage, err := tasquelite.NewGormTaskStorageManager("database.db", &YourDataType{}, 2)
-queue.SetTaskStoreManager(storage)
->>>>>>> 76b7ac700231527a8094e510e254fd52852b51f8
+storage, err := tasquelite.NewGormTaskStorageManager("database.db", &YourDataType{})
 ```
