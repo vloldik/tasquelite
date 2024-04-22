@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"sync"
 	"time"
@@ -27,21 +26,13 @@ type Sender struct {
 	wg *sync.WaitGroup
 }
 
-func (sender Sender) Send(value string) {
+func (sender Sender) Send(value int) {
 	time.Sleep(time.Second)
-	fmt.Printf("sending value %s\n", value)
+	fmt.Printf("sending value %d\n", value)
 	sender.wg.Done()
 }
 
 // Do sends the email. This is a placeholder for the actual email sending logic.
-func Do(ctx context.Context, emailTaskData EmailTaskData) {
-	mailer := ctx.Value(MailerContextValueKey)
-	if sender, ok := mailer.(*Sender); ok {
-		sender.Send(emailTaskData.Body)
-	} else {
-		panic(errors.New("invalid mailer"))
-	}
-}
 
 func main() {
 	// Create a new context with a background.
@@ -50,18 +41,19 @@ func main() {
 	// Create a new WaitGroup to wait for all tasks to complete.
 	wg := &sync.WaitGroup{}
 
+	storage, err := tasquelite.NewGormTaskStorageManager("test.db", &EmailTaskData{})
+
 	// Create a new task queue with a capacity of 5.
-	queue := tasque.NewTasksQueue(Do, 5)
 
 	// Create a new sender with the WaitGroup.
 	sender := Sender{wg: wg}
 
-	// Add the sender to the context.
-	ctx = context.WithValue(ctx, MailerContextValueKey, &sender)
+	Do := func(ctx context.Context, emailTaskData EmailTaskData) bool {
+		sender.Send(emailTaskData.ID)
+		return false
+	}
 
-	// Create a new GORM task storage manager for EmailTask.
-	storage, err := tasquelite.NewGormTaskStorageManager("test.db", &EmailTaskData{}, 2)
-	queue.SetTaskStoreManager(storage)
+	queue := tasque.CreateTaskQueue(Do, 5, storage, func(err error) bool { fmt.Println(err); return false }, time.Hour)
 
 	if err != nil {
 		// Handle the error if storage creation fails.
