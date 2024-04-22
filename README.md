@@ -21,7 +21,5 @@ go get github.com/vloldik/tasquelite
 ## Usage
 
 ```go
-queue = taskqueue.NewTasksQueue[Task](10)
-taskStorage, err := tasquelite.NewGormTaskStorageManager[EmailTask](DatabaseName, &Task{}, 5)
-queue.SetTaskStoreManager(taskStorage)
+taskStorage, err := tasquelite.NewGormTaskStorageManager[EmailTask](DatabaseName, &Task{})
 ```

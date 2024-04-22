@@ -8,12 +8,12 @@ import (
 )
 
 type GormTaskStorage[D interface{}] struct {
-	db        *gorm.DB
-	batchSize int
+	db *gorm.DB
 }
 
-func NewGormTaskStorageManager[D interface{}](dbName string, model *D, batchSize int) (*GormTaskStorage[D], error) {
+func NewGormTaskStorageManager[D interface{}](dbName string, model *D) (*GormTaskStorage[D], error) {
 	db, err := gorm.Open(sqlite.Open(dbName), &gorm.Config{})
+
 	if err != nil {
 		return nil, err
 	}
@@ -24,7 +24,7 @@ func NewGormTaskStorageManager[D interface{}](dbName string, model *D, batchSize
 		return nil, err
 	}
 
-	return &GormTaskStorage[D]{db: db, batchSize: batchSize}, nil
+	return &GormTaskStorage[D]{db: db}, nil
 }
 
 // SaveTaskToStorage saves a task to the storage.
@@ -33,10 +33,10 @@ func (gts *GormTaskStorage[D]) SaveTaskToStorage(ctx context.Context, task *D) e
 }
 
 // GetTasksFromStorage retrieves tasks from the storage.
-func (gts *GormTaskStorage[D]) GetTasksFromStorage(ctx context.Context) ([]D, error) {
+func (gts *GormTaskStorage[D]) GetTasksFromStorage(ctx context.Context, limit int) ([]D, error) {
 	var tasks []D
 	model := new(D)
-	err := gts.db.WithContext(ctx).Model(model).Limit(gts.TaskFromStorageBatchCount()).Find(&tasks).Error
+	err := gts.db.WithContext(ctx).Model(model).Limit(limit).Find(&tasks).Error
 	return tasks, err
 }
 
@@ -44,10 +44,4 @@ func (gts *GormTaskStorage[D]) GetTasksFromStorage(ctx context.Context) ([]D, er
 func (gts *GormTaskStorage[D]) DeleteTaskFromStorage(ctx context.Context, task *D) error {
 	model := new(D)
 	return gts.db.WithContext(ctx).Model(model).Delete(task).Where(task).Error
-}
-
-// TaskFromStorageBatchCount returns the batch count for getting tasks from storage.
-func (gts *GormTaskStorage[D]) TaskFromStorageBatchCount() int {
-	// Implement the logic to determine the batch count.
-	return gts.batchSize
 }
